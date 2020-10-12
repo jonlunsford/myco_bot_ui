@@ -1,0 +1,60 @@
+<tr>
+  <td class="px-6 py-4 whitespace-no-wrap">
+    <div class="text-sm leading-5 font-medium text-gray-900">Humidifier</div>
+  </td>
+
+  <td class="px-6 py-4 whitespace-no-wrap">
+    <% status_classname = if String.downcase(@status) == "online", do: "bg-green-100 text-green-800", else: "bg-red-100 text-red-800" %>
+    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <%= status_classname %>">
+      <%= @status %>
+    </span>
+  </td>
+
+  <td class="px-6 py-4 whitespace-no-wrap">
+    <form name="power" phx-change="device-change" phx-target="<%= @myself %>">
+      <!-- Toggle Button -->
+      <label
+        for="value"
+        class="flex items-center cursor-pointer"
+      >
+        <!-- toggle -->
+        <div class="relative">
+          <!-- input -->
+          <input name="value" type="hidden" value="off" />
+          <input id="value" name="value" type="checkbox" class="hidden" value="on" <%= if @value == 1, do: "checked" %>/>
+          <!-- line -->
+          <div
+            class="toggle__line w-10 h-4 bg-gray-400 rounded-full shadow-inner"
+          ></div>
+          <!-- dot -->
+          <div
+            class="toggle__dot absolute w-6 h-6 bg-white rounded-full shadow inset-y-0 left-0"
+          ></div>
+        </div>
+        <% status_classname = if @value == 1, do: "bg-green-100 text-green-800", else: "bg-red-100 text-red-800" %>
+        <span class="px-2 w-8 inline-flex text-xs leading-5 font-semibold rounded-full <%= status_classname %>">
+          <%= if @value == 1, do: "On", else: "Off" %>
+        </span>
+        <!-- label -->
+      </label>
+    </form>
+  </td>
+
+  <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">
+    <div class="relative w-20">
+      <form name="setting" phx-change="device-change" phx-target="<%= @myself %>">
+        <input phx-debounce="1000" class="w-16 block px-1 sm:text-sm sm:leading-5 border-2 rounded-md" type="number" name="setting" min="1" max="100" value="<%= @setting %>"/>
+      </form>
+      <span class="absolute inset-y-0 right-0 bg-gray-300 text-gray-600 px-1 font-medium rounded-r-md leading-6">%</span>
+    </div>
+  </td>
+
+  <td class="px-6 py-4 whitespace-no-wrap">
+    <div class="text-sm leading-5 font-medium text-gray-900">
+      House Of Hydro
+    </div>
+    <div class="text-sm leading-5 text-gray-500">
+      3 disc fogger
+    </div>
+  </td>
+</tr>

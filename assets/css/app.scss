@@ -1,9 +1,20 @@
-/* This file is for your main application css. */
-@import "../node_modules/nprogress/nprogress.css";
-
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
+
+/* This file is for your main application css. */
+@import "../node_modules/nprogress/nprogress.css";
+
+.toggle__dot {
+  top: -.25rem;
+  left: -.25rem;
+  transition: all 0.3s ease-in-out;
+}
+
+input:checked ~ .toggle__dot {
+  transform: translateX(100%);
+  background-color: #48bb78;
+}
 
 /* LiveView specific classes for your customizations */
 .phx-no-feedback.invalid-feedback,

@@ -10,8 +10,15 @@ use Mix.Config
 # which you should run after static files are built and
 # before starting your production server.
 config :myco_bot_ui, MycoBotUiWeb.Endpoint,
-  url: [host: "example.com", port: 80],
-  cache_static_manifest: "priv/static/cache_manifest.json"
+  cache_static_manifest: "priv/static/cache_manifest.json",
+  # Nerves root filesystem is read-only, so disable the code reloader
+  code_reloader: false,
+  http: [port: 80],
+  # Use compile-time Mix config instead of runtime environment variables
+  load_from_system_env: false,
+  # Start the server since we're running in a release instead of through `mix`
+  server: true,
+  url: [host: "nerves.local", port: 80]
 
 # Do not print debug messages in production
 config :logger, level: :info

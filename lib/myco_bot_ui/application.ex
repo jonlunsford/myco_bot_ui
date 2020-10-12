@@ -17,6 +17,8 @@ defmodule MycoBotUi.Application do
       # {MycoBotUi.Worker, arg}
     ]
 
+    MycoBotUi.Instrumenter.setup()
+
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: MycoBotUi.Supervisor]
