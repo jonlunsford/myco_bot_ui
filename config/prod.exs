@@ -12,12 +12,15 @@ use Mix.Config
 config :myco_bot_ui, MycoBotUiWeb.Endpoint,
   # Nerves root filesystem is read-only, so disable the code reloader
   code_reloader: false,
-  http: [port: 80],
+  http: [port: 8080],
   # Use compile-time Mix config instead of runtime environment variables
   load_from_system_env: false,
   # Start the server since we're running in a release instead of through `mix`
   server: true,
-  url: [host: "nerves.local", port: 80]
+  url: [host: "nerves.local", port: 8080],
+  render_errors: [view: MycoBotUiWeb.ErrorView, accepts: ~w(html json), layout: false],
+  pubsub_server: MycoBotUi.PubSub,
+  live_view: [signing_salt: "Fj2tZT4oGpy4WAER"]
 
 # Do not print debug messages in production
 config :logger, level: :debug
