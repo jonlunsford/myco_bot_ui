@@ -2,11 +2,11 @@
   <div class="bg-red-400 text-red-800 border-red-600 p-4 mb-4 rounded-md"><%= @error %></div>
 <% end %>
 
-<section class="grid grid-rows-2 grid-flow-col gap-8">
-  <div class="row-span-2">
+<section class="grid md:grid-rows-2 md:grid-flow-col gap-8">
+  <div class="md:row-span-2">
     <h5 class="text-2xl text-gray-900 mb-2">Environment</h5>
-    <div class="grid grid-cols-3 gap-2">
-      <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg bg-white p-4">
+    <div class="grid grid-cols-2 gap-4 md:grid-cols-2 md:gap-2">
+      <div class="shadow overflow-hidden border-b border-gray-200 rounded-lg bg-white p-4">
         <h6 class="text-base mb-1 text-gray-600">Tempurature</h6>
 
         <div class="text-gray-700 text-2xl">
@@ -14,7 +14,7 @@
         </div>
       </div>
 
-      <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg bg-white p-4">
+      <div class="shadow overflow-hidden border-b border-gray-200 rounded-lg bg-white p-4">
         <h6 class="text-base mb-1 text-gray-600">Humidity</h6>
 
         <div class="text-gray-700 text-2xl">
@@ -22,13 +22,15 @@
         </div>
       </div>
 
-      <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg bg-white p-4">
+      <!--
+      <div class="shadow overflow-hidden border-b border-gray-200 rounded-lg bg-white p-4">
         <h6 class="text-base mb-1 text-gray-600">Lights</h6>
 
         <div class="text-gray-700 text-2xl">
           <%= @lights %>
         </div>
       </div>
+      -->
     </div>
   </div>
 

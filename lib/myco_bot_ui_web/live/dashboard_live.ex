@@ -40,6 +40,26 @@ defmodule MycoBotUiWeb.DashboardLive do
   end
 
   @impl true
+  def handle_info(%{event: [:myco_bot, :gpio, :up]} = payload, socket) do
+    device = payload.meta
+    devices = socket.assigns.devices
+    index = Enum.find_index(devices, fn d -> d.pin_number == device.pin_number end)
+    devices = List.replace_at(devices, index, device)
+
+    {:noreply, assign(socket, :devices, devices)}
+  end
+
+  @impl true
+  def handle_info(%{event: [:myco_bot, :gpio, :down]} = payload, socket) do
+    device = payload.meta
+    devices = socket.assigns.devices
+    index = Enum.find_index(devices, fn d -> d.pin_number == device.pin_number end)
+    devices = List.replace_at(devices, index, device)
+
+    {:noreply, assign(socket, :devices, devices)}
+  end
+
+  @impl true
   def handle_info({:device_changed, device}, socket) do
     devices = socket.assigns.devices
     index = Enum.find_index(devices, fn d -> d.pin_number == device.pin_number end)
