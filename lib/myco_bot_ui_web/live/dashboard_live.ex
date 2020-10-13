@@ -9,35 +9,34 @@ defmodule MycoBotUiWeb.DashboardLive do
 
     {:ok,
      assign(socket,
-       page_title: "Grow Room 1",
-       temp: 70.0,
-       humidity: 90.0,
+       page_title: "Grow Tent 1",
+       temp: 0,
+       humidity: 0,
        lights: "ON",
-       devices: [
-         %{
-           pin_number: 16,
-           pin_direction: :output,
-           value: 1,
-           setting: 90,
-           status: "Online",
-           type: "humidifier"
-         }
-       ]
+       error: nil,
+       refreshing_devices: false,
+       devices: []
      )}
   end
 
   @impl true
-  def handle_info(%{event: [:myco_bot, :ht_sensor, :read_temp]} = payload, socket) do
-    Logger.debug("[MYCOBOTUI] received update: #{inspect(payload)}")
+  def handle_info(%{event: [:myco_bot, resource, :error]} = payload, socket) do
+    {:noreply, assign(socket, error: "#{resource} error: #{payload.meta.error}")}
+  end
 
+  @impl true
+  def handle_info(%{event: [:myco_bot, :ht_sensor, :read_temp]} = payload, socket) do
     {:noreply, assign(socket, temp: payload.measurements.temp)}
   end
 
   @impl true
   def handle_info(%{event: [:myco_bot, :ht_sensor, :read_rh]} = payload, socket) do
-    Logger.debug("[MYCOBOTUI] received update: #{inspect(payload)}")
-
     {:noreply, assign(socket, humidity: payload.measurements.rh)}
+  end
+
+  @impl true
+  def handle_info(%{event: [:myco_bot, :gpio, :sync]} = payload, socket) do
+    {:noreply, assign(socket, %{devices: payload.meta.devices, refreshing_devices: false})}
   end
 
   @impl true
@@ -53,7 +52,14 @@ defmodule MycoBotUiWeb.DashboardLive do
   def handle_info(payload, socket) do
     Logger.debug("[MYCOBOTUI] DashboardLive received update: #{inspect(payload)}")
 
-    {:noreply, assign(socket, results: payload)}
+    {:noreply, assign(socket, :results, payload)}
+  end
+
+  @impl true
+  def handle_event("refresh_devices", _params, socket) do
+    :telemetry.execute([:myco_bot_ui, :device, :refresh], %{}, %{})
+
+    {:noreply, assign(socket, :refreshing_devices, true)}
   end
 
   @impl true

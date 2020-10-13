@@ -1,4 +1,4 @@
-defmodule MycoBotUiWeb.Components.Humidifier do
+defmodule MycoBotUiWeb.Components.Device do
   use MycoBotUiWeb, :live_component
 
   def mount(_params, _session, socket) do

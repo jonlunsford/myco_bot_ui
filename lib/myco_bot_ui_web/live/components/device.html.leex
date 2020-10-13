@@ -1,6 +1,8 @@
 <tr>
   <td class="px-6 py-4 whitespace-no-wrap">
-    <div class="text-sm leading-5 font-medium text-gray-900">Humidifier</div>
+    <div class="text-sm leading-5 font-medium text-gray-900">
+      <%= String.capitalize(@type) %>
+    </div>
   </td>
 
   <td class="px-6 py-4 whitespace-no-wrap">
@@ -40,21 +42,11 @@
     </form>
   </td>
 
-  <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">
-    <div class="relative w-20">
-      <form name="setting" phx-change="device-change" phx-target="<%= @myself %>">
-        <input phx-debounce="1000" class="w-16 block px-1 sm:text-sm sm:leading-5 border-2 rounded-md" type="number" name="setting" min="1" max="100" value="<%= @setting %>"/>
-      </form>
-      <span class="absolute inset-y-0 right-0 bg-gray-300 text-gray-600 px-1 font-medium rounded-r-md leading-6">%</span>
-    </div>
-  </td>
-
   <td class="px-6 py-4 whitespace-no-wrap">
-    <div class="text-sm leading-5 font-medium text-gray-900">
-      House Of Hydro
-    </div>
     <div class="text-sm leading-5 text-gray-500">
-      3 disc fogger
+      Pin: <%= @pin_number %>
+      <br />
+      Direction: <%= @pin_direction %>
     </div>
   </td>
 </tr>

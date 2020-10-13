@@ -1,3 +1,7 @@
+<%= if @error do %>
+  <div class="bg-red-400 text-red-800 border-red-600 p-4 mb-4 rounded-md"><%= @error %></div>
+<% end %>
+
 <section class="grid grid-rows-2 grid-flow-col gap-8">
   <div class="row-span-2">
     <h5 class="text-2xl text-gray-900 mb-2">Environment</h5>
@@ -29,12 +33,13 @@
   </div>
 
   <div class="row-span-1 col-span-2">
-    <h5 class="text-2xl text-gray-900 mb-2">Devices</h5>
+    <h5 class="text-2xl text-gray-900 mb-2">
+      Devices
+      <svg phx-click="refresh_devices" class="w-5 h-5 cursor-pointer inline-block <%= if @refreshing_devices, do: 'animate-spin' %>" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+      </svg>
+    </h5>
 
-    <!--
-      Tailwind UI components require Tailwind CSS v1.8 and the @tailwindcss/ui plugin.
-      Read the documentation to get started: https://tailwindui.com/documentation
-    -->
     <div class="flex flex-col">
       <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
         <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
@@ -54,9 +59,6 @@
                       Power
                     </th>
                     <th class="px-6 py-3 bg-white text-left text-xs leading-4 font-medium text-gray-600 uppercase tracking-wider">
-                      Setting
-                    </th>
-                    <th class="px-6 py-3 bg-white text-left text-xs leading-4 font-medium text-gray-600 uppercase tracking-wider">
                       Info
                     </th>
                   </tr>
@@ -64,10 +66,8 @@
                 <tbody class="bg-white divide-y divide-gray-200">
                   <%= for device <- @devices do %>
                     <%= live_component @socket,
-                        String.to_existing_atom(
-                          "Elixir.MycoBotUiWeb.Components.#{String.capitalize(device.type)}"),
-                          Map.merge(%{id: "pin-#{device.pin_number}"}, device)
-                    %>
+                          MycoBotUiWeb.Components.Device,
+                          Map.merge(%{id: "pin-#{device.pin_number}"}, device) %>
                   <% end %>
                 </tbody>
               </table>

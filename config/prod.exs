@@ -10,7 +10,6 @@ use Mix.Config
 # which you should run after static files are built and
 # before starting your production server.
 config :myco_bot_ui, MycoBotUiWeb.Endpoint,
-  cache_static_manifest: "priv/static/cache_manifest.json",
   # Nerves root filesystem is read-only, so disable the code reloader
   code_reloader: false,
   http: [port: 80],
