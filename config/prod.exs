@@ -20,7 +20,7 @@ config :myco_bot_ui, MycoBotUiWeb.Endpoint,
   url: [host: "nerves.local", port: 80]
 
 # Do not print debug messages in production
-config :logger, level: :info
+config :logger, level: :debug
 
 # ## SSL Support
 #
