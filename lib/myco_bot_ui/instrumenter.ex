@@ -4,6 +4,7 @@ defmodule MycoBotUi.Instrumenter do
   def setup do
     events = [
       [:myco_bot, :started],
+      [:myco_bot, :state, :broadcast],
 
       [:myco_bot, :ht_sensor, :error],
       [:myco_bot, :ht_sensor, :read_temp],

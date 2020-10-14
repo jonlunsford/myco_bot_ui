@@ -31,17 +31,17 @@ defmodule MycoBotUiWeb.DashboardLive do
 
   @impl true
   def handle_info(%{event: [:myco_bot, resource, :error]} = payload, socket) do
-    {:noreply, assign(socket, error: "#{resource} error: #{payload.meta.error}")}
+    {:noreply, assign(socket, :error, "#{resource} error: #{payload.meta.error}")}
   end
 
   @impl true
   def handle_info(%{event: [:myco_bot, :ht_sensor, :read_temp]} = payload, socket) do
-    {:noreply, assign(socket, temp: payload.measurements.temp)}
+    {:noreply, assign(socket, :temp, payload.measurements.temp)}
   end
 
   @impl true
   def handle_info(%{event: [:myco_bot, :ht_sensor, :read_rh]} = payload, socket) do
-    {:noreply, assign(socket, humidity: payload.measurements.rh)}
+    {:noreply, assign(socket, :rh, payload.measurements.rh)}
   end
 
   @impl true
