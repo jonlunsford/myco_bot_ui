@@ -4,11 +4,8 @@ defmodule MycoBotUiWeb.DashboardLive do
 
   @impl true
   def mount(_params, _session, socket) do
-    if connected?(socket) do
+    if connected?(socket), do:
       Phoenix.PubSub.subscribe(MycoBotUi.PubSub, "mycobot-live", link: true)
-      :telemetry.execute([:myco_bot_ui, :dashboard, :mounted], %{}, %{})
-    end
-
 
     {:ok,
      assign(socket,
@@ -24,6 +21,8 @@ defmodule MycoBotUiWeb.DashboardLive do
 
   @impl true
   def handle_info(%{event: [:myco_bot, :state, :broadcast]} = payload, socket) do
+    Logger.debug("[MYCOBOTUI] #{inspect(payload)}")
+
     assigns = Map.merge(socket.assigns, payload.meta)
 
     {:noreply, assign(socket, assigns)}
@@ -31,26 +30,36 @@ defmodule MycoBotUiWeb.DashboardLive do
 
   @impl true
   def handle_info(%{event: [:myco_bot, resource, :error]} = payload, socket) do
+    Logger.debug("[MYCOBOTUI] #{inspect(payload)}")
+
     {:noreply, assign(socket, :error, "#{resource} error: #{payload.meta.error}")}
   end
 
   @impl true
   def handle_info(%{event: [:myco_bot, :ht_sensor, :read_temp]} = payload, socket) do
+    Logger.debug("[MYCOBOTUI] #{inspect(payload)}")
+
     {:noreply, assign(socket, :temp, payload.measurements.temp)}
   end
 
   @impl true
   def handle_info(%{event: [:myco_bot, :ht_sensor, :read_rh]} = payload, socket) do
+    Logger.debug("[MYCOBOTUI] #{inspect(payload)}")
+
     {:noreply, assign(socket, :rh, payload.measurements.rh)}
   end
 
   @impl true
   def handle_info(%{event: [:myco_bot, :gpio, :sync]} = payload, socket) do
+    Logger.debug("[MYCOBOTUI] #{inspect(payload)}")
+
     {:noreply, assign(socket, %{devices: payload.meta.devices, refreshing_devices: false})}
   end
 
   @impl true
   def handle_info(%{event: [:myco_bot, :gpio, :up]} = payload, socket) do
+    Logger.debug("[MYCOBOTUI] #{inspect(payload)}")
+
     device = payload.meta
 
     {:noreply, assign(socket, :devices, update_devices(device, socket))}
@@ -58,6 +67,8 @@ defmodule MycoBotUiWeb.DashboardLive do
 
   @impl true
   def handle_info(%{event: [:myco_bot, :gpio, :down]} = payload, socket) do
+    Logger.debug("[MYCOBOTUI] #{inspect(payload)}")
+
     device = payload.meta
 
     {:noreply, assign(socket, :devices, update_devices(device, socket))}
@@ -70,7 +81,7 @@ defmodule MycoBotUiWeb.DashboardLive do
 
   @impl true
   def handle_info(payload, socket) do
-    Logger.debug("[MYCOBOTUI] DashboardLive received update: #{inspect(payload)}")
+    Logger.debug("[MYCOBOTUI] unhandled info: #{inspect(payload)}")
 
     {:noreply, assign(socket, :results, payload)}
   end
