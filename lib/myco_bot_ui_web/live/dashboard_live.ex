@@ -4,19 +4,29 @@ defmodule MycoBotUiWeb.DashboardLive do
 
   @impl true
   def mount(_params, _session, socket) do
-    if connected?(socket),
-      do: Phoenix.PubSub.subscribe(MycoBotUi.PubSub, "mycobot-live", link: true)
+    if connected?(socket) do
+      Phoenix.PubSub.subscribe(MycoBotUi.PubSub, "mycobot-live", link: true)
+      :telemetry.execute([:myco_bot_ui, :dashboard, :mounted], %{}, %{})
+    end
+
 
     {:ok,
      assign(socket,
-       page_title: "Grow Tent 1",
-       temp: 0,
-       humidity: 0,
+       page_title: "Grow Tent",
+       temp: 0.0,
+       rh: 0.0,
        lights: "ON",
        error: nil,
        refreshing_devices: false,
        devices: []
      )}
+  end
+
+  @impl true
+  def handle_info(%{event: [:myco_bot, :state, :broadcast]} = payload, socket) do
+    assigns = Map.merge(socket.assigns, payload.meta)
+
+    {:noreply, assign(socket, assigns)}
   end
 
   @impl true
@@ -42,30 +52,20 @@ defmodule MycoBotUiWeb.DashboardLive do
   @impl true
   def handle_info(%{event: [:myco_bot, :gpio, :up]} = payload, socket) do
     device = payload.meta
-    devices = socket.assigns.devices
-    index = Enum.find_index(devices, fn d -> d.pin_number == device.pin_number end)
-    devices = List.replace_at(devices, index, device)
 
-    {:noreply, assign(socket, :devices, devices)}
+    {:noreply, assign(socket, :devices, update_devices(device, socket))}
   end
 
   @impl true
   def handle_info(%{event: [:myco_bot, :gpio, :down]} = payload, socket) do
     device = payload.meta
-    devices = socket.assigns.devices
-    index = Enum.find_index(devices, fn d -> d.pin_number == device.pin_number end)
-    devices = List.replace_at(devices, index, device)
 
-    {:noreply, assign(socket, :devices, devices)}
+    {:noreply, assign(socket, :devices, update_devices(device, socket))}
   end
 
   @impl true
   def handle_info({:device_changed, device}, socket) do
-    devices = socket.assigns.devices
-    index = Enum.find_index(devices, fn d -> d.pin_number == device.pin_number end)
-    devices = List.replace_at(devices, index, device)
-
-    {:noreply, assign(socket, :devices, devices)}
+    {:noreply, assign(socket, :devices, update_devices(device, socket))}
   end
 
   @impl true
@@ -87,5 +87,11 @@ defmodule MycoBotUiWeb.DashboardLive do
     Logger.warn("No event handler for: #{event}")
     Logger.debug("#{inspect(params)}")
     {:noreply, socket}
+  end
+
+  defp update_devices(device, socket) do
+    devices = socket.assigns.devices
+    index = Enum.find_index(devices, fn d -> d.pin_number == device.pin_number end)
+    List.replace_at(devices, index, device)
   end
 end
