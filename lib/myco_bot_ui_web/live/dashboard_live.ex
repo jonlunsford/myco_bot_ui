@@ -4,8 +4,8 @@ defmodule MycoBotUiWeb.DashboardLive do
 
   @impl true
   def mount(_params, _session, socket) do
-    if connected?(socket), do:
-      Phoenix.PubSub.subscribe(MycoBotUi.PubSub, "mycobot-live", link: true)
+    if connected?(socket),
+      do: Phoenix.PubSub.subscribe(MycoBotUi.PubSub, "mycobot-live", link: true)
 
     {:ok,
      assign(socket,
@@ -76,6 +76,12 @@ defmodule MycoBotUiWeb.DashboardLive do
 
   @impl true
   def handle_info({:device_changed, device}, socket) do
+    :telemetry.execute(
+      [:myco_bot_ui, :device, :change],
+      %{},
+      Map.take(device, [:pin_number, :pin_direction, :value, :type, :status])
+    )
+
     {:noreply, assign(socket, :devices, update_devices(device, socket))}
   end
 
