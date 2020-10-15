@@ -12,18 +12,19 @@
   <body class="h-auto bg-gray-200">
     <header>
       <section class="container">
-        <nav class="bg-gray-800">
+        <nav>
           <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
               <div class="flex items-center">
                 <div class="flex-shrink-0">
                   <%= img_tag("/images/myco_farm_co_logo.png", class: "h-12 w-12") %>
                 </div>
+                <span class="text-white font-mono">MycoBot</span>
                 <div class="hidden md:block">
                   <div class="ml-10 flex items-baseline space-x-4">
-                    <a href="#" class="px-3 py-2 rounded-md text-sm font-medium text-white bg-gray-900 focus:outline-none focus:text-white focus:bg-gray-700">Dashboard</a>
+                    <%= link "Dashboard", to: "/", class: "px-3 py-2 rounded-md text-sm font-medium text-white bg-gray-800 focus:outline-none focus:text-white focus:bg-gray-300" %>
                     <%= if function_exported?(Routes, :live_dashboard_path, 2) do %>
-                      <%= link "LiveDashboard", to: Routes.live_dashboard_path(@conn, :home), class: "px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700" %>
+                      <%= link "System", to: Routes.live_dashboard_path(@conn, :home), class: "px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700" %>
                     <% end %>
                   </div>
                 </div>

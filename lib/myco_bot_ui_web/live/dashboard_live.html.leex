@@ -3,10 +3,10 @@
 <% end %>
 
 <section class="grid md:grid-rows-2 md:grid-flow-col gap-8">
-  <div class="md:row-span-2">
+  <div class="sm:row-span-2">
     <h5 class="text-2xl text-gray-900 mb-2">Environment</h5>
-    <div class="grid grid-cols-2 gap-4 md:grid-cols-2 md:gap-2">
-      <div class="shadow overflow-hidden border-b border-gray-200 rounded-lg bg-white p-4">
+    <div class="grid grid-cols-2 gap-4 sm:grid-cols-2 sm:gap-4">
+      <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg bg-white p-4">
         <h6 class="text-base mb-1 text-gray-600">Tempurature</h6>
 
         <div class="text-gray-700 text-2xl">
@@ -14,7 +14,7 @@
         </div>
       </div>
 
-      <div class="shadow overflow-hidden border-b border-gray-200 rounded-lg bg-white p-4">
+      <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg bg-white p-4">
         <h6 class="text-base mb-1 text-gray-600">Humidity</h6>
 
         <div class="text-gray-700 text-2xl">
@@ -23,7 +23,7 @@
       </div>
 
       <!--
-      <div class="shadow overflow-hidden border-b border-gray-200 rounded-lg bg-white p-4">
+      <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg bg-white p-4">
         <h6 class="text-base mb-1 text-gray-600">Lights</h6>
 
         <div class="text-gray-700 text-2xl">
@@ -34,7 +34,7 @@
     </div>
   </div>
 
-  <div class="row-span-1 col-span-2">
+  <div class="sm:row-span-1 sm:col-span-2">
     <h5 class="text-2xl text-gray-900 mb-2">
       Devices
       <svg phx-click="refresh_devices" class="w-5 h-5 cursor-pointer inline-block <%= if @refreshing_devices, do: 'animate-spin' %>" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -43,44 +43,17 @@
     </h5>
 
     <div class="flex flex-col">
-      <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-        <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-          <%= if Enum.any?(@devices) do %>
-            <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-
-              <table class="min-w-full divide-y divide-gray-200">
-                <thead>
-                  <tr>
-                    <th class="px-6 py-3 bg-white text-left text-xs leading-4 font-medium text-gray-600 uppercase tracking-wider">
-                      Name
-                    </th>
-                    <th class="px-6 py-3 bg-white text-left text-xs leading-4 font-medium text-gray-600 uppercase tracking-wider">
-                      Status
-                    </th>
-                    <th class="px-6 py-3 bg-white text-left text-xs leading-4 font-medium text-gray-600 uppercase tracking-wider">
-                      Power
-                    </th>
-                    <th class="px-6 py-3 bg-white text-left text-xs leading-4 font-medium text-gray-600 uppercase tracking-wider">
-                      Info
-                    </th>
-                  </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                  <%= for device <- @devices do %>
-                    <%= live_component @socket,
-                          MycoBotUiWeb.Components.Device,
-                          Map.merge(%{id: "pin-#{device.pin_number}"}, device) %>
-                  <% end %>
-                </tbody>
-              </table>
-            </div>
-          <% else %>
-            <div class="border-4 border-dashed border-gray-300 rounded-md p-6 text-center">
-              <span class="text-xl text-gray-600">Waiting For Devices...</span>
-            </div>
-          <% end %>
+      <%= if Enum.any?(@devices) do %>
+        <%= for device <- @devices do %>
+          <%= live_component @socket,
+                MycoBotUiWeb.Components.Device,
+                Map.merge(%{id: "pin-#{device.pin_number}"}, device) %>
+        <% end %>
+      <% else %>
+        <div class="border-4 border-dashed border-gray-300 rounded-md p-6 text-center">
+          <span class="text-xl text-gray-600">Waiting For Devices...</span>
         </div>
-      </div>
+      <% end %>
     </div>
   </div>
 </section>

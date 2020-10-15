@@ -16,6 +16,10 @@ input:checked ~ .toggle__dot {
   background-color: #48bb78;
 }
 
+nav {
+ background: #232323;
+}
+
 /* LiveView specific classes for your customizations */
 .phx-no-feedback.invalid-feedback,
 .phx-no-feedback .invalid-feedback {
