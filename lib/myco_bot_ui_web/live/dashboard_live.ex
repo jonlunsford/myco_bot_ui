@@ -52,8 +52,6 @@ defmodule MycoBotUiWeb.DashboardLive do
   def handle_info(%{event: [:myco_bot, :ht_sensor, :read_temp]} = payload, socket) do
     Logger.debug("[MYCOBOTUI] #{inspect(payload)}")
 
-    schedule_chart_update()
-
     {:noreply, assign(socket, :temp, payload.measurements.temp)}
   end
 
