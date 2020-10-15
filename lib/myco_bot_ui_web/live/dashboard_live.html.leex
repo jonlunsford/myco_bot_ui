@@ -2,10 +2,11 @@
   <div class="bg-red-400 text-red-800 border-red-600 p-4 mb-4 rounded-md"><%= @error %></div>
 <% end %>
 
-<section class="grid md:grid-rows-2 md:grid-flow-col gap-8">
+<section class="grid sm:grid-rows-2 sm:grid-flow-col gap-8">
   <div class="sm:row-span-2">
     <h5 class="text-2xl text-gray-900 mb-2">Environment</h5>
-    <div class="grid grid-cols-2 gap-4 sm:grid-cols-2 sm:gap-4">
+
+    <div class="grid grid-cols-2 gap-4 sm:grid-cols-2 sm:gap-4 mb-6">
       <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg bg-white p-4">
         <h6 class="text-base mb-1 text-gray-600">Tempurature</h6>
 
@@ -31,6 +32,10 @@
         </div>
       </div>
       -->
+    </div>
+
+    <div phx-update="ignore">
+      <canvas id="line-chart" phx-hook="AreaChart"></canvas>
     </div>
   </div>
 

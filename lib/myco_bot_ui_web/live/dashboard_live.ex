@@ -20,6 +20,19 @@ defmodule MycoBotUiWeb.DashboardLive do
   end
 
   @impl true
+  def handle_info(:update_chart, socket) do
+    time = DateTime.utc_now()
+
+    points = %{
+      rh: socket.assigns.rh,
+      temp: socket.assigns.temp,
+      timestamp: "#{time.minute}:#{time.second}"
+    }
+
+    {:noreply, socket |> push_event("data-updated", points)}
+  end
+
+  @impl true
   def handle_info(%{event: [:myco_bot, :state, :broadcast]} = payload, socket) do
     Logger.debug("[MYCOBOTUI] #{inspect(payload)}")
 
@@ -39,12 +52,16 @@ defmodule MycoBotUiWeb.DashboardLive do
   def handle_info(%{event: [:myco_bot, :ht_sensor, :read_temp]} = payload, socket) do
     Logger.debug("[MYCOBOTUI] #{inspect(payload)}")
 
+    schedule_chart_update()
+
     {:noreply, assign(socket, :temp, payload.measurements.temp)}
   end
 
   @impl true
   def handle_info(%{event: [:myco_bot, :ht_sensor, :read_rh]} = payload, socket) do
     Logger.debug("[MYCOBOTUI] #{inspect(payload)}")
+
+    schedule_chart_update()
 
     {:noreply, assign(socket, :rh, payload.measurements.rh)}
   end
@@ -111,4 +128,6 @@ defmodule MycoBotUiWeb.DashboardLive do
     index = Enum.find_index(devices, fn d -> d.pin_number == device.pin_number end)
     List.replace_at(devices, index, device)
   end
+
+  defp schedule_chart_update, do: self() |> Process.send_after(:update_chart, 1000)
 end
