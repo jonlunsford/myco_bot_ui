@@ -1,53 +1,39 @@
 <div class="bg-white shadow overflow-hidden sm:rounded-lg sm:grid-cols-2 mb-8">
   <div class="px-4 py-5 border-b border-gray-200 sm:px-6">
     <h3 class="text-lg leading-6 font-medium text-gray-900">
-      <%= String.capitalize(@type) %>
+      <%= String.capitalize(@description) %>
     </h3>
     <p class="mt-1 max-w-2xl text-sm leading-5 text-gray-500">
-      <%= @description %>
+      <%= String.capitalize(Atom.to_string(@type)) %>
     </p>
   </div>
   <div>
     <dl>
-      <div class="bg-gray-100 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-        <dt class="text-sm leading-5 font-medium text-gray-900">
-          Status
-        </dt>
-        <dd class="mt-1 text-sm leading-5 text-gray-900 sm:mt-0 sm:col-span-2">
-          <% status_classname = if String.downcase(@status) == "online", do: "bg-green-100 text-green-800", else: "bg-red-100 text-red-800" %>
-          <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <%= status_classname %>">
-            <%= @status %>
-          </span>
-        </dd>
-      </div>
       <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
         <dt class="text-sm leading-5 font-medium text-gray-900">
           Power
         </dt>
         <dd class="mt-1 text-sm leading-5 text-gray-900 sm:mt-0 sm:col-span-2">
-          <form name="power" phx-change="device-change" phx-target="<%= @myself %>">
+          <form name="power-<%= @pin %>" phx-change="device-change" phx-target="<%= @myself %>">
             <!-- Toggle Button -->
             <label
-              for="value"
+              for="value-<%= @pin %>"
               class="flex items-center cursor-pointer"
             >
               <!-- toggle -->
               <div class="relative">
                 <!-- input -->
+                <% checked = if @status == :up, do: "checked" %>
                 <input name="value" type="hidden" value="off" />
-                <input id="value" name="value" type="checkbox" class="hidden" value="on" <%= if @value == 1, do: "checked" %>/>
+                <input id="value-<%= @pin %>" name="value-<%= @pin %>" type="checkbox" class="hidden" value="on" <%= checked %> />
                 <!-- line -->
-                <div
-                  class="toggle__line w-10 h-4 bg-gray-400 rounded-full shadow-inner"
-                ></div>
+                <div class="toggle__line w-10 h-4 bg-gray-400 rounded-full shadow-inner"></div>
                 <!-- dot -->
-                <div
-                  class="toggle__dot absolute w-6 h-6 bg-white rounded-full shadow inset-y-0 left-0"
-                ></div>
+                <div class="toggle__dot absolute w-6 h-6 bg-white rounded-full shadow inset-y-0 left-0"></div>
               </div>
-              <% status_classname = if @value == 1, do: "bg-green-100 text-green-800", else: "bg-red-100 text-red-800" %>
+              <% status_classname = if @status == :up, do: "bg-green-100 text-green-800", else: "bg-red-100 text-red-800" %>
               <span class="px-2 w-8 inline-flex text-xs leading-5 font-semibold rounded-full <%= status_classname %>">
-                <%= if @value == 1, do: "On", else: "Off" %>
+                <%= if @status == :up, do: "On", else: "Off" %>
               </span>
               <!-- label -->
             </label>
@@ -60,9 +46,11 @@
         </dt>
         <dd class="mt-1 text-sm leading-5 text-gray-900 sm:mt-0 sm:col-span-2">
           <div class="text-sm leading-5 text-gray-500">
-            Pin: <%= @pin_number %>
+            Pin: <%= @pin %>
             <br />
-            Direction: <%= @pin_direction %>
+            Direction: <%= @direction %>
+            <br />
+            Polarity: <%= @polarity %>
           </div>
         </dd>
       </div>

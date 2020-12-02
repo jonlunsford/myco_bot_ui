@@ -10,9 +10,10 @@ defmodule MycoBotUiWeb.DashboardLive do
     {:ok,
      assign(socket,
        page_title: "Grow Tent",
-       temp: 0.0,
-       rh: 0.0,
-       lights: "ON",
+       temperature: 0.0,
+       humidity: 0.0,
+       lux: 0.0,
+       white_level: 0.0,
        error: nil,
        refreshing_devices: false,
        devices: []
@@ -24,21 +25,12 @@ defmodule MycoBotUiWeb.DashboardLive do
     time = DateTime.utc_now()
 
     points = %{
-      rh: socket.assigns.rh,
-      temp: socket.assigns.temp,
+      humidity: socket.assigns.humidity,
+      temperature: socket.assigns.temperature,
       timestamp: "#{time.minute}:#{time.second}"
     }
 
     {:noreply, socket |> push_event("data-updated", points)}
-  end
-
-  @impl true
-  def handle_info(%{event: [:myco_bot, :state, :broadcast]} = payload, socket) do
-    Logger.debug("[MYCOBOTUI] #{inspect(payload)}")
-
-    assigns = Map.merge(socket.assigns, payload.meta)
-
-    {:noreply, assign(socket, assigns)}
   end
 
   @impl true
@@ -49,20 +41,31 @@ defmodule MycoBotUiWeb.DashboardLive do
   end
 
   @impl true
-  def handle_info(%{event: [:myco_bot, :ht_sensor, :read_temp]} = payload, socket) do
-    Logger.debug("[MYCOBOTUI] #{inspect(payload)}")
-
-    {:noreply, assign(socket, :temp, payload.measurements.temp)}
-  end
-
-  @impl true
-  def handle_info(%{event: [:myco_bot, :ht_sensor, :read_rh]} = payload, socket) do
+  def handle_info(%{event: [:myco_bot, :sht30, :read]} = payload, socket) do
     Logger.debug("[MYCOBOTUI] #{inspect(payload)}")
 
     schedule_chart_update()
 
-    {:noreply, assign(socket, :rh, payload.measurements.rh)}
+    {:noreply,
+     assign(socket, %{
+       temperature: payload.measurements.temperature,
+       humidity: payload.measurements.humidity,
+       error: nil
+     })}
   end
+
+  @impl true
+  def handle_info(%{event: [:myco_bot, :veml7700, :read]} = payload, socket) do
+    Logger.debug("[MYCOBOTUI] #{inspect(payload)}")
+
+    {:noreply,
+     assign(socket, %{
+       lux: payload.measurements.lux,
+       white_level: payload.measurements.white,
+       error: nil
+     })}
+  end
+
 
   @impl true
   def handle_info(%{event: [:myco_bot, :gpio, :sync]} = payload, socket) do
@@ -90,11 +93,20 @@ defmodule MycoBotUiWeb.DashboardLive do
   end
 
   @impl true
+  def handle_info(%{event: [:myco_bot, :gpio, :toggle]} = payload, socket) do
+    Logger.debug("[MYCOBOTUI] #{inspect(payload)}")
+
+    device = payload.meta
+
+    {:noreply, assign(socket, :devices, update_devices(device, socket))}
+  end
+
+  @impl true
   def handle_info({:device_changed, device}, socket) do
     :telemetry.execute(
       [:myco_bot_ui, :device, :change],
       %{},
-      Map.take(device, [:pin_number, :pin_direction, :value, :type, :status])
+      Map.take(device, [:pin, :direction, :value, :type, :status])
     )
 
     {:noreply, assign(socket, :devices, update_devices(device, socket))}
@@ -109,6 +121,8 @@ defmodule MycoBotUiWeb.DashboardLive do
 
   @impl true
   def handle_event("refresh_devices", _params, socket) do
+    Logger.debug("[MYCOBOTUI] requesting refresh devices")
+
     :telemetry.execute([:myco_bot_ui, :device, :refresh], %{}, %{})
 
     {:noreply, assign(socket, :refreshing_devices, true)}
@@ -123,7 +137,7 @@ defmodule MycoBotUiWeb.DashboardLive do
 
   defp update_devices(device, socket) do
     devices = socket.assigns.devices
-    index = Enum.find_index(devices, fn d -> d.pin_number == device.pin_number end)
+    index = Enum.find_index(devices, fn d -> d.pin == device.pin end)
     List.replace_at(devices, index, device)
   end
 

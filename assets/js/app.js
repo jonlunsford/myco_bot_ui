@@ -49,16 +49,16 @@ hooks.AreaChart = {
     this.handleEvent("data-updated", (payload) => {
       if(chart.data.datasets[0].data.length >= 10) {
         chart.data.datasets[0].data.shift()
-        chart.data.datasets[0].data.push(payload.rh)
+        chart.data.datasets[0].data.push(payload.humidity)
 
         chart.data.datasets[1].data.shift()
-        chart.data.datasets[1].data.push(payload.temp)
+        chart.data.datasets[1].data.push(payload.temperature)
 
         chart.data.labels.shift()
         chart.data.labels.push(payload.timestamp)
       } else {
-        chart.data.datasets[0].data.push(payload.rh)
-        chart.data.datasets[1].data.push(payload.temp)
+        chart.data.datasets[0].data.push(payload.humidity)
+        chart.data.datasets[1].data.push(payload.temperature)
         chart.data.labels.push(payload.timestamp)
       }
 
