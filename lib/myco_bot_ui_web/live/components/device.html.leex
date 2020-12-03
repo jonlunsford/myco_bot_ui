@@ -1,10 +1,11 @@
-<div class="bg-white shadow overflow-hidden sm:rounded-lg sm:grid-cols-2 mb-8">
+<div class="bg-white shadow overflow-hidden border-b border-gray-200 sm:rounded-lg bg-white">
   <div class="px-4 py-5 border-b border-gray-200 sm:px-6">
     <h3 class="text-lg leading-6 font-medium text-gray-900">
       <%= String.capitalize(@description) %>
     </h3>
+
     <p class="mt-1 max-w-2xl text-sm leading-5 text-gray-500">
-      <%= String.capitalize(Atom.to_string(@type)) %>
+      <%= String.capitalize(Atom.to_string(@type)) %> <%= @pin %>
     </p>
   </div>
   <div>
@@ -40,6 +41,7 @@
           </form>
         </dd>
       </div>
+      <!--
       <div class="bg-gray-100 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
         <dt class="text-sm leading-5 font-medium text-gray-900">
           Info
@@ -54,6 +56,7 @@
           </div>
         </dd>
       </div>
+      -->
     </dl>
   </div>
 </div>
