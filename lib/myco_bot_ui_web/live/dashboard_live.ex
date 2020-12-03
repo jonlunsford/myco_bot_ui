@@ -4,8 +4,10 @@ defmodule MycoBotUiWeb.DashboardLive do
 
   @impl true
   def mount(_params, _session, socket) do
-    if connected?(socket),
-      do: Phoenix.PubSub.subscribe(MycoBotUi.PubSub, "mycobot-live", link: true)
+    if connected?(socket) do
+      Phoenix.PubSub.subscribe(MycoBotUi.PubSub, "mycobot-live", link: true)
+      :telemetry.execute([:myco_bot_ui, :dashboard, :mounted], %{}, %{})
+    end
 
     {:ok,
      assign(socket,
@@ -16,78 +18,7 @@ defmodule MycoBotUiWeb.DashboardLive do
        white_level: 0.0,
        error: nil,
        refreshing_devices: false,
-       devices: [
-        %{
-          type: :gpio,
-          pin: 26,
-          direction: :output,
-          value: 1,
-          polarity: :reverse,
-          status: :up,
-          ref: nil,
-          description: "Fogger"
-        },
-        %{
-          type: :gpio,
-          pin: 5,
-          direction: :output,
-          value: 0,
-          polarity: :reverse,
-          status: :up,
-          ref: nil,
-          description: "Air Intake"
-        },
-        %{
-          type: :gpio,
-          pin: 0,
-          direction: :output,
-          value: 1,
-          polarity: :reverse,
-          status: :up,
-          ref: nil,
-          description: "Exhaust Fan"
-        },
-        %{
-          type: :gpio,
-          pin: 13,
-          direction: :output,
-          value: 0,
-          polarity: :reverse,
-          status: :up,
-          ref: nil,
-          description: "Lights"
-        },
-        %{
-          type: :gpio,
-          pin: 11,
-          direction: :output,
-          value: 1,
-          polarity: :reverse,
-          status: :up,
-          ref: nil,
-          description: "Circulation Fan 1"
-        },
-        %{
-          type: :gpio,
-          pin: 9,
-          direction: :output,
-          value: 1,
-          polarity: :reverse,
-          status: :up,
-          ref: nil,
-          description: "Circulation Fan 2"
-        },
-        %{
-          type: :gpio,
-          pin: 6,
-          direction: :output,
-          value: 1,
-          polarity: :reverse,
-          status: :up,
-          ref: nil,
-          description: "Misc 1"
-        }
-       ]
+       devices: []
      )}
   end
 
@@ -136,7 +67,6 @@ defmodule MycoBotUiWeb.DashboardLive do
        error: nil
      })}
   end
-
 
   @impl true
   def handle_info(%{event: [:myco_bot, :gpio, :sync]} = payload, socket) do
