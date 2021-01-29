@@ -6,20 +6,16 @@
   <div class="sm:row-span-2">
     <h5 class="text-2xl text-gray-900 mb-2">Environment</h5>
 
-    <%= if Enum.any?(Map.values(@environment)) do %>
-      <div class="mb-4" phx-update="ignore">
-        <form name="environment" phx-change="environment-change">
-          <div class="grid sm:grid-cols-2 gap-4 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg bg-white p-4">
-            <%= for {key, value} <- @environment do %>
-              <div class="flex">
-                <label class="mr-1"><%= Atom.to_string(key) %>: </label>
-                <input class="w-12 px-2 rounded-md border border-gray-200" type="text" name=<%= Atom.to_string(key) %> value=<%= value %>>
-              </div>
-            <% end %>
+    <form class="mb-4 block" name="environment" phx-change="environment-change">
+      <div class="grid sm:grid-cols-2 gap-4 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg bg-white p-4">
+        <%= for {key, value} <- @environment do %>
+          <div class="flex">
+            <label class="mr-1"><%= Atom.to_string(key) %>: </label>
+            <input class="w-12 px-2 rounded-md border border-gray-200" type="text" name=<%= Atom.to_string(key) %> value=<%= value %> />
           </div>
-        </form>
+        <% end %>
       </div>
-    <% end %>
+    </form>
 
     <div class="grid grid-cols-2 gap-4 sm:grid-cols-2 sm:gap-4 mb-4">
       <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg bg-white p-4">
@@ -37,24 +33,6 @@
           <%= @humidity %> <span class="text-gray-500 text-sm">%</span>
         </div>
       </div>
-
-      <!--
-      <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg bg-white p-4">
-        <h6 class="text-base mb-1 text-gray-600">Lux</h6>
-
-        <div class="text-gray-700 text-2xl">
-          <%= @lux  %>
-        </div>
-      </div>
-
-      <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg bg-white p-4">
-        <h6 class="text-base mb-1 text-gray-600">White Level</h6>
-
-        <div class="text-gray-700 text-2xl">
-          <%= @white_level  %>
-        </div>
-      </div>
-      -->
     </div>
 
     <div phx-update="ignore" class="sm:shadow sm:border-b sm:border-gray-200 sm:rounded-lg sm:bg-white sm:p-4">

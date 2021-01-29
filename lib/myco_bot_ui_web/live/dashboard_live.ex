@@ -18,7 +18,7 @@ defmodule MycoBotUiWeb.DashboardLive do
        white_level: 0.0,
        error: nil,
        refreshing_devices: false,
-       environment: %{},
+       environment: %{foo: 1},
        devices: []
      )}
   end
