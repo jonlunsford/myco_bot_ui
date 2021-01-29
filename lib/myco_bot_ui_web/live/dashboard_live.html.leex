@@ -13,7 +13,7 @@
             <%= for {key, value} <- @environment do %>
               <div class="flex">
                 <label class="mr-1"><%= Atom.to_string(key) %>: </label>
-                <input class="w-12 px-2 rounded-md border border-gray-200" type="text" name=<%= Atom.to_string(key) %> value=<%= value %> />
+                <input class="w-12 px-2 rounded-md border border-gray-200" type="text" name=<%= Atom.to_string(key) %> value=<%= value %>>
               </div>
             <% end %>
           </div>
