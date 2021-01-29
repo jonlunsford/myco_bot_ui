@@ -18,6 +18,7 @@ defmodule MycoBotUiWeb.DashboardLive do
        white_level: 0.0,
        error: nil,
        refreshing_devices: false,
+       environment: %{},
        devices: []
      )}
   end
@@ -66,6 +67,13 @@ defmodule MycoBotUiWeb.DashboardLive do
        white_level: payload.measurements.white,
        error: nil
      })}
+  end
+
+  @impl true
+  def handle_info(%{event: [:myco_bot, :environment, :sync]} = payload, socket) do
+    Logger.debug("[MYCOBOTUI] #{inspect(payload)}")
+
+    {:noreply, assign(socket, :environment, payload.meta.config)}
   end
 
   @impl true
@@ -121,12 +129,29 @@ defmodule MycoBotUiWeb.DashboardLive do
   end
 
   @impl true
-  def handle_event("refresh_devices", _params, socket) do
+  def handle_event("refresh-devices", _params, socket) do
     Logger.debug("[MYCOBOTUI] requesting refresh devices")
 
     :telemetry.execute([:myco_bot_ui, :device, :refresh], %{}, %{})
 
     {:noreply, assign(socket, :refreshing_devices, true)}
+  end
+
+  @impl true
+  def handle_event("environment-change", %{"_target" => [attr]} = params, socket) do
+    Logger.debug("[MYCOBOTUI] requesting environment update for #{attr} to #{params[attr]}")
+
+    key = String.to_atom(attr)
+
+    value =
+      case Integer.parse(params[attr]) do
+        :error -> nil
+        {integer, _rest} -> integer
+      end
+
+    :telemetry.execute([:myco_bot_ui, :environment, :change], %{}, %{key: key, value: value})
+
+    {:noreply, socket}
   end
 
   @impl true

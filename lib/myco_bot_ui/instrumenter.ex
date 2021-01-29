@@ -15,7 +15,9 @@ defmodule MycoBotUi.Instrumenter do
       [:myco_bot, :gpio, :up],
       [:myco_bot, :gpio, :down],
       [:myco_bot, :gpio, :toggle],
-      [:myco_bot, :gpio, :sync]
+      [:myco_bot, :gpio, :sync],
+
+      [:myco_bot, :environment, :sync]
     ]
 
     :telemetry.attach_many(

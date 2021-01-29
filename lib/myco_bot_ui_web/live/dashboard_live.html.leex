@@ -6,6 +6,21 @@
   <div class="sm:row-span-2">
     <h5 class="text-2xl text-gray-900 mb-2">Environment</h5>
 
+    <%= if Enum.any?(Map.values(@environment)) do %>
+      <div class="mb-4">
+        <form name="environment" phx-change="environment-change">
+          <div class="grid sm:grid-cols-2 gap-4 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg bg-white p-4">
+            <%= for {key, value} <- @environment do %>
+              <div class="flex">
+                <label class="mr-1"><%= Atom.to_string(key) %>: </label>
+                <input class="w-12 px-2 rounded-md border border-gray-200" type="text" name=<%= Atom.to_string(key) %> value=<%= value %> />
+              </div>
+            <% end %>
+          </div>
+        </form>
+      </div>
+    <% end %>
+
     <div class="grid grid-cols-2 gap-4 sm:grid-cols-2 sm:gap-4 mb-4">
       <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg bg-white p-4">
         <h6 class="text-base mb-1 text-gray-600">Tempurature</h6>
@@ -50,7 +65,7 @@
   <div class="sm:row-span-1 sm:col-span-2">
     <h5 class="text-2xl text-gray-900 mb-2">
       Devices
-      <svg phx-click="refresh_devices" class="w-5 h-5 cursor-pointer inline-block <%= if @refreshing_devices, do: 'animate-spin' %>" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <svg phx-click="refresh-devices" class="w-5 h-5 cursor-pointer inline-block <%= if @refreshing_devices, do: 'animate-spin' %>" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
       </svg>
     </h5>
