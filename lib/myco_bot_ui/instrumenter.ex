@@ -7,6 +7,8 @@ defmodule MycoBotUi.Instrumenter do
 
       [:myco_bot, :sht30, :error],
       [:myco_bot, :sht30, :read],
+      [:myco_bot, :si7021, :error],
+      [:myco_bot, :si7021, :read],
       [:myco_bot, :veml7700, :error],
       [:myco_bot, :veml7700, :read],
 
